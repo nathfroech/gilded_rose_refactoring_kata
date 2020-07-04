@@ -1,0 +1,7 @@
+# Dev
+isort<5.0
+wemake-python-styleguide
+mypy
+pytest
+PyHamcrest
+pre-commit
