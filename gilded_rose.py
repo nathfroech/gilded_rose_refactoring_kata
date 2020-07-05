@@ -1,11 +1,19 @@
-# -*- coding: utf-8 -*-
+from typing import List
 
-class GildedRose(object):
+AGED_BRIE = 'Aged Brie'
+SULFURAS = 'Sulfuras, Hand of Ragnaros'
+BACKSTAGE_PASS = 'Backstage passes to a TAFKAL80ETC concert'
 
-    def __init__(self, items):
+MIN_QUALITY = 0
+MAX_QUALITY = 50
+LEGENDARY_QUALITY = 80
+
+
+class GildedRose:
+    def __init__(self, items: List['Item']) -> None:
         self.items = items
 
-    def update_quality(self):
+    def update_quality(self) -> None:
         for item in self.items:
             if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert":
                 if item.quality > 0:
