@@ -20,7 +20,12 @@ class GildedRose:
 
     def update_quality(self) -> None:
         for item in self.items:
-            handle_item = self.special_handlers.get(item.name, self._update_regular_item)
+            if item.name in self.special_handlers:
+                handle_item = self.special_handlers[item.name]  # noqa: WPS529
+            elif item.name.startswith('Conjured'):
+                handle_item = self._update_conjured_item
+            else:
+                handle_item = self._update_regular_item
             handle_item(item)
 
     def _update_regular_item(self, item: 'Item') -> None:
@@ -50,6 +55,13 @@ class GildedRose:
             item.quality = min(item.quality + 3, MAX_QUALITY)
         else:
             item.quality = MIN_QUALITY
+
+    def _update_conjured_item(self, item: 'Item') -> None:
+        item.sell_in -= 1
+        if item.sell_in >= 0:
+            item.quality = max(item.quality - 2, MIN_QUALITY)
+        else:
+            item.quality = max(item.quality - 4, MIN_QUALITY)
 
 
 class Item:

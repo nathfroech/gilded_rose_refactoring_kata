@@ -95,6 +95,25 @@ class TestGildedRose:
             has_properties(sell_in=expected_sell_in, quality=expected_quality),
         ))
 
+    @pytest.mark.parametrize('sell_in,quality,expected_sell_in,expected_quality', [
+        pytest.param(10, 20, 9, 18, id='common_case'),
+        pytest.param(0, 20, -1, 16, id='sell_by_date_passed'),
+        pytest.param(10, MIN_QUALITY, 9, MIN_QUALITY, id='zero_quality'),
+        pytest.param(0, MIN_QUALITY, -1, MIN_QUALITY, id='zero_quality_and_sell_by_date_passed'),
+        pytest.param(0, 3, -1, MIN_QUALITY, id='quality_is_3_and_sell_by_date_passed'),
+    ])
+    def test_conjured_items(self, sell_in, quality, expected_sell_in, expected_quality):
+        items = [
+            Item(name='Conjured Mana Cake', sell_in=sell_in, quality=quality),
+        ]
+        gilded_rose = GildedRose(items)
+
+        gilded_rose.update_quality()
+
+        assert_that(gilded_rose.items, contains_exactly(
+            has_properties(sell_in=expected_sell_in, quality=expected_quality),
+        ))
+
     def test_combined_case(self):
         items = [
             Item(name='+5 Dexterity Vest', sell_in=10, quality=20),
@@ -120,5 +139,5 @@ class TestGildedRose:
             has_properties(sell_in=14, quality=21),
             has_properties(sell_in=9, quality=MAX_QUALITY),
             has_properties(sell_in=4, quality=MAX_QUALITY),
-            has_properties(sell_in=2, quality=5),
+            has_properties(sell_in=2, quality=4),
         ))
